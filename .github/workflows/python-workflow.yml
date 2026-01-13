@@ -1,18 +1,24 @@
-name: CI
-
-on:
-  push:  
-
+name: Installing Python
+'on':
+  - push
 jobs:
   build:
-    runs-on: ubuntu-latest
-
+    runs-on: '${{ matrix.os }}'
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-14
+          - windows-latest
+        py-version:
+          - "3.10"
+          - "3.11"
+          - "3.12"
+        exclude: #added
+          - os: macos-14 #added
+            py-version: 3.12 #added
     steps:
-    - name: Set up Python 3.11
-      uses: actions/setup-python@v5
-      with:
-        python-version: 3.11
-
-    - name: Install dependencies
-      run: |
-        pip install -r requirements.txt
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '${{ matrix.py-version }}'
